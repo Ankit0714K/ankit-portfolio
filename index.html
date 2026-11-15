@@ -57,6 +57,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.id==
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const safeUrl = value => { try { const u = new URL(value); return ["https:","http:"].includes(u.protocol) ? u.href : ""; } catch { return ""; } };
   let records = [];
+  const originalSkills = [...ME.skills];
   let isAdmin = false;
   let editingId = null;
 
@@ -136,7 +137,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.id==
   function renderPortfolio() {
     ME.stories = ME.stories.filter(x => !x._cms);
     ME.projects = ME.projects.filter(x => !x._cms);
-    ME.skills = ME.skills.filter(x => !String(x).startsWith("__CMS__"));
+    ME.skills = [...originalSkills];
     for (const row of records) {
       if (row.is_visible || isAdmin) addRecordToPortfolio(row);
     }
@@ -240,7 +241,6 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.id==
   function resetForm() {
     editingId = null;
     itemForm.reset();
-    panel.querySelector("#item-email");
     panel.querySelector("#item-visible").checked = true;
     panel.querySelector("#item-save").textContent = "Add item";
     panel.querySelector("#item-cancel").hidden = true;
